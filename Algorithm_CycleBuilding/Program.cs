@@ -18,8 +18,13 @@ namespace Algorithm_CycleBuilding
 
             //var cycleBuilder = new CycleBuilder(14, 10, 2, 40, 10); //1352 ms
 
-            var cycleBuilder = new CycleBuilder(14, 12, 5, 15, 20); //False [Time] 3584,9881 ms
+            //var cycleBuilder = new CycleBuilder(14, 12, 5, 15, 20); //False [Time] 3584,9881 ms
 
+            //var cycleBuilder = new CycleBuilder(14, 12, 5, 15, 20, true);
+
+            var cycleBuilder = new CycleBuilder(14, 12, 5, 5, 20, true);
+
+            //var cycleBuilder = new CycleBuilder(14, 12, 5, 15, 20, true);
 
             Console.ReadLine();
         }

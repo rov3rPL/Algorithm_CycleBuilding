@@ -43,7 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlockBuilder.cs" />
     <Compile Include="CycleBuilder.cs" />
+    <Compile Include="FuncExtensions\Memoize.cs" />
+    <Compile Include="FuncExtensions\Detuplify.cs" />
+    <Compile Include="FuncExtensions\Tuplify.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

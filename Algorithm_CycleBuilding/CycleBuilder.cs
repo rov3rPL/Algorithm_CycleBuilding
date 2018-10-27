@@ -11,8 +11,11 @@ namespace Algorithm_CycleBuilding
         private int ProbabilityOfSuccessBlockBuilding;
 
         internal int NumberOfBlockBuildingTries { get; private set; }
+        
+        private BlockBuilder BlockBuilder { get; set; }
 
-        internal CycleBuilder(int startSpanInDays, int numberOfBlocks, int daySpan, int timeOfBlockBuilding, int probabilityOfSuccessBlockBuilding)
+        internal CycleBuilder(int startSpanInDays, int numberOfBlocks, int daySpan, int timeOfBlockBuilding, int probabilityOfSuccessBlockBuilding,
+            bool memoizeBuiltBlocks)
         {
             StartSpanInDays = startSpanInDays;
             NumberOfBlocks = numberOfBlocks;
@@ -22,11 +25,13 @@ namespace Algorithm_CycleBuilding
 
             NumberOfBlockBuildingTries = 0;
 
+            BlockBuilder = new BlockBuilder();
+
             TimeSpan start = DateTime.Now.TimeOfDay;
             var success = Start(NumberOfBlocks);
             TimeSpan end = DateTime.Now.TimeOfDay;
             var diff = (end - start).TotalMilliseconds;
-            Console.WriteLine($"[Success] {success} [Time] {diff} ms, Block building tries = {NumberOfBlockBuildingTries}");
+            Console.WriteLine($"[Success] {success} [Time] {diff} ms, Block building tries = {NumberOfBlockBuildingTries}, Real block buildings = {BlockBuilder.RealBlockBuildings}");
 
         }
 
@@ -34,34 +39,35 @@ namespace Algorithm_CycleBuilding
         {
             for(int i=0; i<StartSpanInDays; ++i)
             {
-                var isSuccess = FindSolution(numberOfBlocks);
+                var isSuccess = FindSolution(numberOfBlocks, i);
                 if (isSuccess)
                     return true;
             }
             return false;
         }
 
-        private bool FindSolution(int numberOfBlocks)
+        private bool FindSolution(int numberOfBlocks, int offsetFromStart)
         {
+            //Console.WriteLine("FindSolution numberOfBlocks = {0}, offsetFromStart = {1}", numberOfBlocks, offsetFromStart);
             if (numberOfBlocks == 0)
                 return true;
 
-            for(int i=0; i<DaySpan; ++i)
+            for(int i=1; i<=DaySpan; ++i)
             {
-                var isBlock = TryToBuildBlock();
+                var isBlock = TryToBuildBlock(offsetFromStart + i);
                 if (isBlock)
-                    return FindSolution(numberOfBlocks - 1);
+                    return FindSolution(numberOfBlocks - 1, offsetFromStart + i);
             }
             return false;
         }
  
-        private bool TryToBuildBlock()
+        private bool TryToBuildBlock(int offsetFromStart)
         {
-            System.Threading.Thread.Sleep(TimeOfBlockBuilding);
+            var blockBuildingResult = BlockBuilder.Build(TimeOfBlockBuilding, ProbabilityOfSuccessBlockBuilding, offsetFromStart);
+
             ++NumberOfBlockBuildingTries;
-            var r = new System.Random();
-            var rand = r.Next(100);
-            return rand < ProbabilityOfSuccessBlockBuilding;
+
+            return blockBuildingResult;
         }
 
     }
