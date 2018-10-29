@@ -7,17 +7,16 @@ namespace Algorithm_CycleBuilding
     {
         internal int RealBlockBuildings { get; /*private*/ set; }
 
-        internal BlockBuilder()
+        internal BlockBuilder(bool memoizeBuiltBlocks)
         {
-            //_buildMemoized = _build.Memoize();
-            _buildMemoized = _build;
+            _buildFunction = memoizeBuiltBlocks ? _build.Memoize() : _build;
             RealBlockBuildings = 0;
         }
 
         public bool Build(int timeOfBlockBuilding, int probabilityOfSuccessBlockBuilding,
             int offsetFromStart)
         {
-            return _buildMemoized(this, timeOfBlockBuilding, probabilityOfSuccessBlockBuilding, offsetFromStart);
+            return _buildFunction(this, timeOfBlockBuilding, probabilityOfSuccessBlockBuilding, offsetFromStart);
         }
 
         private Func<BlockBuilder, int, int, int, bool> _build = (BlockBuilder blockBuilder, int timeOfBlockBuilding, int probabilityOfSuccessBlockBuilding,
@@ -32,7 +31,7 @@ namespace Algorithm_CycleBuilding
         };
 
         //private Func<int, int, int, bool> _buildMemoized;
-        private Func<BlockBuilder, int, int, int, bool> _buildMemoized;
+        private Func<BlockBuilder, int, int, int, bool> _buildFunction;
 
     }
 }
