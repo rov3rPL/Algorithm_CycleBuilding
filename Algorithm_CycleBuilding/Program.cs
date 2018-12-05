@@ -65,11 +65,13 @@ namespace Algorithm_CycleBuilding
             int N_SAMPLES = 100;
             var test_StartDays = new int[] { 14 };
             var test_NumberOfBlocks = new int[] { 12 };
-            var test_SpanDays = new int[] { 2, 5 };
-            var test_TimeOfBlockBuilding = new int[] { 5, 40 };
+                    //var test_SpanDays = new int[] { 2, 5 };
+            //var test_SpanDays = new int[][] { new int[2] { 1, 2 }, new int[2] { 1, 5 } };
+            var test_SpanDays = new int[][] { new int[2] { 2, 3 } };
+            var test_TimeOfBlockBuilding = new int[] { 40, 5 };
             var test_ProbabilityOfBlockBuilding =
-                                        new int[] { 2, 5, 10, 20, 33, 50, 70, 100 };
-                                        //new int[] { -1 };
+                                        //new int[] { 2, 5, 10, 20, 33, 50, 70, 100 };
+                                        new int[] { -1 }; //test pesymistyczny1
                                         //new int[] { 100 };
             var test_UseMemoization = new bool[] {
                 false,
@@ -94,7 +96,8 @@ namespace Algorithm_CycleBuilding
                                         var cycleBuilder = new CycleBuilder(
                                             test_StartDays[i],
                                             test_NumberOfBlocks[j],
-                                            test_SpanDays[k],
+                                            test_SpanDays[k][0], //span days from
+                                            test_SpanDays[k][1], //span days to
                                             test_TimeOfBlockBuilding[n],
                                             test_ProbabilityOfBlockBuilding[m],
                                             test_UseMemoization[p]

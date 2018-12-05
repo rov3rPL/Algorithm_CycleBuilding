@@ -6,7 +6,8 @@ namespace Algorithm_CycleBuilding
     {
         private int StartSpanInDays;
         private int NumberOfBlocks;
-        private int DaySpan;
+        private int DaySpanFrom;
+        private int DaySpanTo;
         private int TimeOfBlockBuilding;
         private int ProbabilityOfSuccessBlockBuilding;
 
@@ -16,12 +17,14 @@ namespace Algorithm_CycleBuilding
 
         private BlockBuilder BlockBuilder { get; set; }
 
-        internal CycleBuilder(int startSpanInDays, int numberOfBlocks, int daySpan, int timeOfBlockBuilding, int probabilityOfSuccessBlockBuilding,
+        internal CycleBuilder(int startSpanInDays, int numberOfBlocks, int daySpanFrom, int daySpanTo, 
+            int timeOfBlockBuilding, int probabilityOfSuccessBlockBuilding,
             bool memoizeBuiltBlocks, bool runPesimistic = false)
         {
             StartSpanInDays = startSpanInDays;
             NumberOfBlocks = numberOfBlocks;
-            DaySpan = daySpan;
+            DaySpanFrom = daySpanFrom;
+            DaySpanTo = daySpanTo;
             TimeOfBlockBuilding = timeOfBlockBuilding;
             ProbabilityOfSuccessBlockBuilding = probabilityOfSuccessBlockBuilding;
 
@@ -43,7 +46,7 @@ namespace Algorithm_CycleBuilding
         {
             for(int i=0; i<StartSpanInDays; ++i)
             {
-                var isBlock = TryToBuildBlock(i, GetProbabilityOfSuccessBlockBuilding(numberOfBlocks), numberOfBlocks); //go down to every leaf
+                var isBlock = TryToBuildBlock(i, GetProbabilityOfSuccessBlockBuilding(numberOfBlocks, i), numberOfBlocks); //go down to every leaf
                 if (isBlock)
                 {
                     --numberOfBlocks;
@@ -62,9 +65,9 @@ namespace Algorithm_CycleBuilding
             if (numberOfBlocks == 0)
                 return true;
 
-            for(int i=1; i<=DaySpan; ++i)
+            for(int i=DaySpanFrom; i<=DaySpanTo; ++i)
             {
-                var isBlock = TryToBuildBlock(offsetFromStart + i, GetProbabilityOfSuccessBlockBuilding(numberOfBlocks), numberOfBlocks); //go down to every leaf
+                var isBlock = TryToBuildBlock(offsetFromStart + i, GetProbabilityOfSuccessBlockBuilding(numberOfBlocks, i), numberOfBlocks); //go down to every leaf
                 if (isBlock)
                 {
                     var solution = FindSolution(numberOfBlocks - 1, offsetFromStart + i);
@@ -86,9 +89,24 @@ namespace Algorithm_CycleBuilding
             return blockBuildingResult;
         }
 
-        private int GetProbabilityOfSuccessBlockBuilding(int blockNumber)
+        private int GetProbabilityOfSuccessBlockBuilding(int blockNumber, int offset)
         {
-            return RunPesimistic ? (blockNumber != 1 ? 100 : 0) : ProbabilityOfSuccessBlockBuilding;
+            //return RunPesimistic ? (blockNumber != 1 ? 100 : 0) : ProbabilityOfSuccessBlockBuilding;
+
+            int offsetFromStart = blockNumber + offset;
+            switch(offsetFromStart)
+            {
+                case 5:
+                case 6:
+                case 8:
+                case 9:
+                case 10:
+                case 12:
+                case 13:
+                    return 0;
+                default:
+                    return 100;
+            }
         }
     }
 }
